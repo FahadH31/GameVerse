@@ -2,9 +2,205 @@
 let cart = JSON.parse(localStorage.getItem('gameverse_cart')) || [];
 let allProducts = []; // Store all products for filtering
 
+// --- AUTHENTICATION LOGIC (Retained from previous turn) ---
+
+function saveUsers(users) {
+    localStorage.setItem('gameverse_users', JSON.stringify(users));
+}
+
+function getUsers() {
+    return JSON.parse(localStorage.getItem('gameverse_users')) || [];
+}
+
+function getCurrentUser() {
+    return localStorage.getItem('gameverse_currentUser');
+}
+
+function loginUser(email, password) {
+    const users = getUsers();
+    const user = users.find(u => u.email === email && u.password === password); // Password stored in plaintext for prototype
+    
+    if (user) {
+        localStorage.setItem('gameverse_currentUser', user.email);
+        return true;
+    }
+    return false;
+}
+
+function signupUser(email, password) {
+    const users = getUsers();
+    if (users.some(u => u.email === email)) {
+        return { success: false, message: 'User with this email already exists.' };
+    }
+    
+    users.push({ email, password });
+    saveUsers(users);
+    return { success: true, message: 'Sign up successful! Please log in.' };
+}
+
+function logoutUser() {
+    localStorage.removeItem('gameverse_currentUser');
+    window.location.href = 'index.html'; // Redirect to home after logout
+}
+
+function checkUserStatus() {
+    const currentUser = getCurrentUser();
+    const profileButton = document.querySelector('.profile-btn');
+    const profileIcon = profileButton?.querySelector('svg');
+    
+    if (profileButton) {
+        if (currentUser) {
+            // User is logged in: Change button action to prompt for logout
+            profileButton.onclick = () => {
+                if (confirm(`Logged in as: ${currentUser}. Do you want to log out?`)) {
+                    logoutUser();
+                }
+            };
+            
+            // Visual cue: Change icon color to green
+            if (profileIcon) {
+                // Ensure there is a CSS variable for accent-green defined in styles.css
+                profileIcon.style.stroke = '#2dd4bf'; 
+            }
+        } else {
+            // User is logged out: Redirect to signup.html
+            profileButton.onclick = () => {
+                window.location.href = 'signup.html';
+            };
+            if (profileIcon) {
+                profileIcon.style.stroke = 'currentColor'; // Default color
+            }
+        }
+    }
+}
+
+// --- PRODUCT DISPLAY, FILTERING, AND SEARCH LOGIC ---
+
+// New helper function to display products
+function displayProducts(productsToDisplay) {
+    // Hide all products first
+    allProducts.forEach(p => p.element.style.display = 'none');
+    
+    // Show filtered/searched products
+    const grid = document.querySelector('.products-grid');
+    if (grid) {
+        // Clear and re-append in sorted order (important for sorting)
+        productsToDisplay.forEach(p => {
+            p.element.style.display = 'block';
+            grid.appendChild(p.element);
+        });
+    }
+}
+
+// Helper function to handle sorting/filtering logic
+function filterAndSortProducts(productsToProcess, productType, priceRange, sortBy) {
+    let filteredProducts = [...productsToProcess];
+
+    // Filter by product type
+    if (productType === 'Games') {
+        filteredProducts = filteredProducts.filter(p => 
+            !p.category.includes('controller') && 
+            !p.category.includes('keyboard') && 
+            !p.category.includes('headset')
+        );
+    } else if (productType === 'Accessories') {
+        filteredProducts = filteredProducts.filter(p => 
+            p.category.includes('controller') || 
+            p.category.includes('keyboard') || 
+            p.category.includes('headset')
+        );
+    }
+    
+    // Filter by price range
+    if (priceRange === 'Under $50') {
+        filteredProducts = filteredProducts.filter(p => p.price < 50);
+    } else if (priceRange === '$50 - $100') {
+        filteredProducts = filteredProducts.filter(p => p.price >= 50 && p.price <= 100);
+    } else if (priceRange === 'Over $100') {
+        filteredProducts = filteredProducts.filter(p => p.price > 100);
+    }
+    
+    // Sort products
+    if (sortBy === 'Price: Low to High') {
+        filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'Price: High to Low') {
+        filteredProducts.sort((a, b) => b.price - a.price);
+    }
+
+    return filteredProducts;
+}
+
+
+// Master function to update product display based on filters AND search
+function updateProductDisplay() {
+    const productTypeFilter = document.querySelector('.filter-select:nth-child(2)');
+    const priceRangeFilter = document.querySelector('.filter-select:nth-child(3)');
+    const sortFilter = document.querySelector('.filter-select:nth-child(4)');
+    const searchInput = document.getElementById('searchInput');
+
+    const productType = productTypeFilter?.value || 'All Products';
+    const priceRange = priceRangeFilter?.value || 'Price Range';
+    const sortBy = sortFilter?.value || 'Sort By: Featured';
+    const searchTerm = searchInput?.value.toLowerCase().trim() || '';
+
+    let productsToProcess = [...allProducts];
+
+    // 1. Apply Search Filter first (if applicable)
+    if (searchTerm) {
+        productsToProcess = productsToProcess.filter(p => 
+            p.title.includes(searchTerm) || 
+            p.category.includes(searchTerm)
+        );
+    }
+
+    // 2. Apply Dropdown Filters and Sort
+    let finalProducts = filterAndSortProducts(productsToProcess, productType, priceRange, sortBy);
+    
+    // 3. Display the final list
+    displayProducts(finalProducts);
+}
+
+// Filtering functionality setup for games page
+function setupFiltering() {
+    // Store all products initially
+    const productCards = document.querySelectorAll('.product-card');
+    allProducts = Array.from(productCards).map(card => ({
+        element: card,
+        title: card.querySelector('.product-title').textContent.toLowerCase(),
+        category: card.querySelector('.product-category').textContent.toLowerCase(),
+        price: parseFloat(card.querySelector('.product-price').textContent.replace('$', ''))
+    }));
+    
+    // Get filter elements
+    const productTypeFilter = document.querySelector('.filter-select:nth-child(2)');
+    const priceRangeFilter = document.querySelector('.filter-select:nth-child(3)');
+    const sortFilter = document.querySelector('.filter-select:nth-child(4)');
+    const searchInput = document.getElementById('searchInput');
+
+    // Add event listeners for dropdowns
+    if (productTypeFilter) {
+        productTypeFilter.addEventListener('change', updateProductDisplay);
+    }
+    if (priceRangeFilter) {
+        priceRangeFilter.addEventListener('change', updateProductDisplay);
+    }
+    if (sortFilter) {
+        sortFilter.addEventListener('change', updateProductDisplay);
+    }
+    
+    // Add event listener for search input
+    if (searchInput) {
+        searchInput.addEventListener('input', updateProductDisplay);
+    }
+}
+
+
+// --- DOM MANIPULATION AND EVENT LISTENERS ---
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
+    checkUserStatus(); // Check and update user status on all pages
     
     // If on checkout page, render cart
     if (window.location.pathname.includes('checkout.html')) {
@@ -50,7 +246,89 @@ document.addEventListener('DOMContentLoaded', () => {
             updateShipping(radio.value);
         });
     });
+
+    // --- AUTH FORM SUBMISSIONS (Retained from previous turn) ---
+
+    // Signup form logic
+    const signupForm = document.getElementById('signupForm');
+    if (signupForm) {
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            
+            if (!email || !password) {
+                alert('Please enter both email and password.');
+                return;
+            }
+
+            const result = signupUser(email, password);
+            if (result.success) {
+                alert(result.message);
+                window.location.href = 'login.html';
+            } else {
+                alert(result.message);
+            }
+        });
+    }
+
+    // Login form logic
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                alert('Please enter both email and password.');
+                return;
+            }
+
+            if (loginUser(email, password)) {
+                alert('Login successful!');
+                window.location.href = 'index.html'; // Redirect to home on successful login
+            } else {
+                alert('Login failed. Check your email and password.');
+            }
+        });
+    }
+    
+    // --- SEARCH TOGGLE & INPUT LOGIC (NEW) ---
+    const searchToggle = document.getElementById('searchToggle');
+    const searchContainer = document.getElementById('searchContainer');
+    const searchInput = document.getElementById('searchInput');
+
+    if (searchToggle && searchContainer && searchInput) {
+        searchToggle.addEventListener('click', () => {
+            searchContainer.classList.toggle('active');
+            
+            if (searchContainer.classList.contains('active')) {
+                searchInput.focus();
+            } else {
+                // Clear search and re-run display logic when closing
+                searchInput.value = '';
+                // Only run updateProductDisplay if we are on a page that supports filtering (games.html)
+                if (window.location.pathname.includes('games.html')) {
+                    updateProductDisplay(); 
+                }
+            }
+        });
+
+        // Handle pressing ESC key to close search bar
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchContainer.classList.contains('active')) {
+                searchContainer.classList.remove('active');
+                searchInput.value = '';
+                // Only run updateProductDisplay if on games.html
+                if (window.location.pathname.includes('games.html')) {
+                    updateProductDisplay(); 
+                }
+            }
+        });
+    }
 });
+
 
 // Add item to cart
 function addToCart(item) {
@@ -130,7 +408,7 @@ function renderCart() {
             <div class="cart-list-item-info">
                 <h4>${item.product}</h4>
                 <p>${item.category}</p>
-                <p class="item-price">${item.price.toFixed(2)}</p>
+                <p class="item-price">$${item.price.toFixed(2)}</p>
             </div>
             <div class="quantity-controls">
                 <button onclick="updateQuantity(\`${item.product}\`, -1)">-</button>
@@ -153,7 +431,7 @@ function renderCart() {
                 <div class="cart-item-info">
                     <h4>${item.product}</h4>
                     <p>${item.category}</p>
-                    <p class="item-price">${item.price.toFixed(2)}</p>
+                    <p class="item-price">$${item.price.toFixed(2)}</p>
                 </div>
                 <span class="item-quantity">x${item.quantity || 1}</span>
             </div>
@@ -165,7 +443,17 @@ function renderCart() {
 function updateOrderSummary() {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
     const tax = subtotal * 0.09; // 9% tax
-    const shippingCost = parseFloat(document.querySelector('input[name="delivery"]:checked')?.value === 'express' ? 4.99 : document.querySelector('input[name="delivery"]:checked')?.value === 'overnight' ? 9.99 : 0) || 0;
+    
+    const selectedDeliveryRadio = document.querySelector('input[name="delivery"]:checked');
+    let deliveryType = selectedDeliveryRadio ? selectedDeliveryRadio.value : 'standard';
+
+    let shippingCost = 0;
+    if (deliveryType === 'express') {
+        shippingCost = 4.99;
+    } else if (deliveryType === 'overnight') {
+        shippingCost = 9.99;
+    }
+
     const total = subtotal + tax + shippingCost;
     
     // Update all summary elements
@@ -176,42 +464,56 @@ function updateOrderSummary() {
     document.querySelectorAll('#tax, #summaryTax').forEach(el => {
         el.textContent = '$' + tax.toFixed(2);
     });
+
+    // Update shipping text based on cost
+    const shippingElements = document.querySelectorAll('#shipping, #summaryShipping');
+    shippingElements.forEach(el => {
+        if (shippingCost === 0) {
+            el.textContent = 'FREE';
+            el.classList.add('free-text');
+        } else {
+            el.textContent = '$' + shippingCost.toFixed(2);
+            el.classList.remove('free-text');
+        }
+    });
     
     document.querySelectorAll('#total, #summaryTotal').forEach(el => {
         el.textContent = '$' + total.toFixed(2);
     });
 }
 
-// Update shipping cost
+// Update shipping cost - called when delivery option is changed
 function updateShipping(deliveryType) {
     const shippingElements = document.querySelectorAll('#shipping, #summaryShipping');
-    let shippingCost = 0;
+    
+    let shippingCostText = 'FREE';
+    let isFree = true;
     
     switch(deliveryType) {
         case 'standard':
-            shippingCost = 0;
-            shippingElements.forEach(el => {
-                el.textContent = 'FREE';
-                el.classList.add('free-text');
-            });
+            shippingCostText = 'FREE';
+            isFree = true;
             break;
         case 'express':
-            shippingCost = 4.99;
-            shippingElements.forEach(el => {
-                el.textContent = '$4.99';
-                el.classList.remove('free-text');
-            });
+            shippingCostText = '$4.99';
+            isFree = false;
             break;
         case 'overnight':
-            shippingCost = 9.99;
-            shippingElements.forEach(el => {
-                el.textContent = '$9.99';
-                el.classList.remove('free-text');
-            });
+            shippingCostText = '$9.99';
+            isFree = false;
             break;
     }
     
-    updateOrderSummary();
+    shippingElements.forEach(el => {
+        el.textContent = shippingCostText;
+        if (isFree) {
+            el.classList.add('free-text');
+        } else {
+            el.classList.remove('free-text');
+        }
+    });
+    
+    updateOrderSummary(); // Recalculate total with new shipping cost
 }
 
 // Continue to delivery
@@ -221,6 +523,16 @@ function continueToDelivery() {
         return;
     }
     
+    // Require login to continue checkout
+    if (!getCurrentUser()) {
+        const confirmLogin = confirm("You need to log in or sign up to continue checkout. Redirect to login?");
+        if (confirmLogin) {
+             window.location.href = 'login.html';
+             return;
+        }
+        return; // Stop if not logged in and user cancels redirect
+    }
+
     document.getElementById('cartSection').style.display = 'none';
     document.getElementById('deliverySection').style.display = 'block';
     
@@ -245,7 +557,11 @@ function continueToPayment() {
     
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
-        if (!field.value.trim()) {
+        // Basic email validation for prototype
+        if (fieldId === 'email' && !/\S+@\S+\.\S+/.test(field.value.trim())) {
+            field.style.borderColor = '#ef4444';
+            isValid = false;
+        } else if (!field.value.trim()) {
             field.style.borderColor = '#ef4444';
             isValid = false;
         } else {
@@ -254,7 +570,7 @@ function continueToPayment() {
     });
     
     if (!isValid) {
-        alert('Please fill in all required fields');
+        alert('Please fill in all required fields correctly');
         return;
     }
     
@@ -292,6 +608,16 @@ function goToDelivery() {
 
 // Complete purchase
 function completePurchase() {
+    // Simple payment form validation
+    const cardNumber = document.querySelector('.payment-form input[placeholder="1234 5678 9012 3456"]').value;
+    const expiryDate = document.querySelector('.payment-form input[placeholder="MM/YY"]').value;
+    const cvv = document.querySelector('.payment-form input[placeholder="123"]').value;
+
+    if (cardNumber.length < 19 || expiryDate.length < 5 || cvv.length < 3) {
+        alert('Please enter valid payment details.');
+        return;
+    }
+    
     // Clear cart
     cart = [];
     saveCart();
@@ -311,89 +637,3 @@ document.querySelectorAll('.cta-button').forEach(button => {
         }
     });
 });
-
-// Filtering functionality for games page
-function setupFiltering() {
-    // Store all products initially
-    const productCards = document.querySelectorAll('.product-card');
-    allProducts = Array.from(productCards).map(card => ({
-        element: card,
-        title: card.querySelector('.product-title').textContent.toLowerCase(),
-        category: card.querySelector('.product-category').textContent.toLowerCase(),
-        // FIX: Correctly remove the '$' symbol before parsing the price.
-        price: parseFloat(card.querySelector('.product-price').textContent.replace('$', ''))
-    }));
-    
-    // Get filter elements
-    const productTypeFilter = document.querySelector('.filter-select:nth-child(2)');
-    const priceRangeFilter = document.querySelector('.filter-select:nth-child(3)');
-    const sortFilter = document.querySelector('.filter-select:nth-child(4)');
-    
-    // Add event listeners
-    if (productTypeFilter) {
-        productTypeFilter.addEventListener('change', applyFilters);
-    }
-    if (priceRangeFilter) {
-        priceRangeFilter.addEventListener('change', applyFilters);
-    }
-    if (sortFilter) {
-        sortFilter.addEventListener('change', applyFilters);
-    }
-}
-
-function applyFilters() {
-    const productTypeFilter = document.querySelector('.filter-select:nth-child(2)');
-    const priceRangeFilter = document.querySelector('.filter-select:nth-child(3)');
-    const sortFilter = document.querySelector('.filter-select:nth-child(4)');
-    
-    const productType = productTypeFilter?.value || 'All Products';
-    const priceRange = priceRangeFilter?.value || 'Price Range';
-    const sortBy = sortFilter?.value || 'Sort By: Featured';
-    
-    // Filter products
-    let filteredProducts = [...allProducts];
-    
-    // Filter by product type
-    if (productType === 'Games') {
-        filteredProducts = filteredProducts.filter(p => 
-            !p.category.includes('controller') && 
-            !p.category.includes('keyboard') && 
-            !p.category.includes('headset')
-        );
-    } else if (productType === 'Accessories') {
-        filteredProducts = filteredProducts.filter(p => 
-            p.category.includes('controller') || 
-            p.category.includes('keyboard') || 
-            p.category.includes('headset')
-        );
-    }
-    
-    // Filter by price range
-    if (priceRange === 'Under $50') {
-        filteredProducts = filteredProducts.filter(p => p.price < 50);
-    } else if (priceRange === '$50 - $100') {
-        filteredProducts = filteredProducts.filter(p => p.price >= 50 && p.price <= 100);
-    } else if (priceRange === 'Over $100') {
-        filteredProducts = filteredProducts.filter(p => p.price > 100);
-    }
-    
-    // Sort products
-    if (sortBy === 'Price: Low to High') {
-        filteredProducts.sort((a, b) => a.price - b.price);
-    } else if (sortBy === 'Price: High to Low') {
-        filteredProducts.sort((a, b) => b.price - a.price);
-    }
-    
-    // Hide all products first
-    allProducts.forEach(p => p.element.style.display = 'none');
-    
-    // Show filtered products
-    const grid = document.querySelector('.products-grid');
-    if (grid) {
-        // Clear and re-append in sorted order
-        filteredProducts.forEach(p => {
-            p.element.style.display = 'block';
-            grid.appendChild(p.element);
-        });
-    }
-}

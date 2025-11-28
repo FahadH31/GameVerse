@@ -1144,6 +1144,41 @@ body {
     box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
 }
 
+/* Search Bar Implementation (NEW) */
+.search-bar-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; 
+    max-width: 90%;
+    z-index: 99;
+    transition: opacity 0.3s, visibility 0.3s;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Crucial to allow clicking elements behind it when hidden */
+}
+
+.search-bar-container.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid var(--accent-purple);
+    background-color: var(--secondary-bg);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    outline: none;
+}
+/* End of Search Bar Implementation */
+
+
 /* Responsive */
 @media (max-width: 1200px) {
     .products-grid {
@@ -1174,6 +1209,10 @@ body {
     
     .footer-content {
         grid-template-columns: 1fr 1fr;
+    }
+
+    .search-bar-container {
+        width: 90%;
     }
 }
 
