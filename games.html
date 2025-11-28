@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games & Gears - GameVerse</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">GameVerse</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="games.html">Games & Gears</a>
+                <a href="checkout.html">Checkout</a>
+            </div>
+            <div class="nav-icons">
+                <button class="icon-btn search-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn cart-btn" onclick="window.location.href='checkout.html'">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn profile-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="games-page">
+        <div class="games-header">
+            <div class="games-title">
+                <h1><span class="trending-highlight">Trending</span> <span class="games-gradient">Games & Gear</span></h1>
+                <p>Discover the must-have titles and next-gen gaming essentials</p>
+            </div>
+            <div class="filters">
+                <span class="filter-label">FILTER BY:</span>
+                <select class="filter-select">
+                    <option>All Products</option>
+                    <option>Games</option>
+                    <option>Accessories</option>
+                </select>
+                <select class="filter-select">
+                    <option>Price Range</option>
+                    <option>Under $50</option>
+                    <option>$50 - $100</option>
+                    <option>Over $100</option>
+                </select>
+                <select class="filter-select">
+                    <option>Sort By: Featured</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Rating</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-badge bestseller">BESTSELLER 🔥</div>
+                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202506/2509/ec1eec85d9130210701491db769cb9874cc09f6512ebca20.png" alt="NBA 2K26" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">SPORTS/PS5/XBOX</span>
+                        <span class="product-rating">★★★★★ (5726)</span>
+                    </div>
+                    <h3 class="product-title">NBA 2K26</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$89.99</span>
+                        <button class="add-to-cart-btn" data-product="NBA 2K26" data-price="89.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-badge preorder">PRE-ORDER 🎮</div>
+                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202508/2217/9df33e894f4749153d28efd88a8e2b8fc85a2cbf90b68b27.jpg" alt="Call Of Duty - Black Ops 7" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">SHOOTER/PS5/XBOX</span>
+                        <span class="product-rating">★★★★ (2548)</span>
+                    </div>
+                    <h3 class="product-title">Call Of Duty - Black Ops 7</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$99.99</span>
+                        <button class="add-to-cart-btn" data-product="Call Of Duty - Black Ops 7" data-price="99.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202507/0314/95ddc898bbc2258a099b13db13ca4cebf17c036b3d986235.png" alt="College Football 26" class="product-image">
+                <div class="product-deluxe">DELUXE EDITION</div>
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">SPORTS/PS5/XBOX</span>
+                        <span class="product-rating">★★★★ (6787)</span>
+                    </div>
+                    <h3 class="product-title">College Football 26</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$79.99</span>
+                        <button class="add-to-cart-btn" data-product="College Football 26" data-price="79.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/1c7b75d8ed9271516546560d219ad0b22ee0a263b4537bd8.png" alt="Spider-Man 2" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">ACTION/PS5</span>
+                        <span class="product-rating">★★★★★ (4767)</span>
+                    </div>
+                    <h3 class="product-title">Spider-Man 2</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$89.99</span>
+                        <button class="add-to-cart-btn" data-product="Spider-Man 2" data-price="89.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://www.igrandtheftauto.com/content/images/gta5-logo-square.png" alt="Grand Theft Auto V" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">ADVENTURE/PS5/XBOX</span>
+                        <span class="product-rating">★★★★★ (10828)</span>
+                    </div>
+                    <h3 class="product-title">Grand Theft Auto V</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$49.99</span>
+                        <button class="add-to-cart-btn" data-product="Grand Theft Auto V" data-price="49.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-badge exclusive">EXCLUSIVE 💎</div>
+                <img src="https://res.cloudinary.com/scuf-pwa/image/upload/v1749575857/products/PDPs/Reflex/reflex_pro_steel_grey_threequarters_playstation_controller_750x750_u3wvdh.png" alt="PS5 Scuff Controller" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">PS5 CONTROLLER</span>
+                        <span class="product-rating">★★★★★ (1789)</span>
+                    </div>
+                    <h3 class="product-title">PS5 Scuff Controller</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$169.99</span>
+                        <button class="add-to-cart-btn" data-product="PS5 Scuf Controller" data-price="169.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="https://m.media-amazon.com/images/I/815XJdl7fXL.jpg" alt="BlackWindow 75% Keyboard" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">KEYBOARD</span>
+                        <span class="product-rating">★★★★★ (7282)</span>
+                    </div>
+                    <h3 class="product-title">BlackWindow 75% Keyboard</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$229.99</span>
+                        <button class="add-to-cart-btn" data-product="Black Widow 75% Keyboard" data-price="229.99">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-badge sale">SALE 30% OFF 🏷️</div>
+                <img src="https://m.media-amazon.com/images/I/71amC+nIa4L.jpg" alt="Razor Kaira Headset" class="product-image">
+                <div class="product-info">
+                    <div class="product-meta">
+                        <span class="product-category">PS5/XBOX HEADSET</span>
+                        <span class="product-rating">★★★★★ (3489)</span>
+                    </div>
+                    <h3 class="product-title">Razor Kaira Headset</h3>
+                    <div class="product-footer">
+                        <span class="product-price">$79.99</span>
+                        <button class="add-to-cart-btn" data-product="Razor Kaira Headset" data-price="79.99">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>GameVerse</h3>
+                <p>Your ultimate gaming marketplace. Discover, play, and connect with gamers worldwide.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">Games</a></li>
+                    <li><a href="#">Gears</a></li>
+                    <li><a href="#">Deals</a></li>
+                    <li><a href="#">Pre-Orders</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="#">Forums</a></li>
+                    <li><a href="#">Streams</a></li>
+                    <li><a href="#">Tournaments</a></li>
+                    <li><a href="#">Events</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 GameVerse. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

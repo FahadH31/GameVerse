@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVerse - Level Up Your Gaming Experience</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">GameVerse</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="games.html">Games & Gears</a>
+                <a href="checkout.html">Checkout</a>
+            </div>
+            <div class="nav-icons">
+                <button class="icon-btn search-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn cart-btn" onclick="window.location.href='checkout.html'">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="navCartCount"></span>
+                </button>
+                <button class="icon-btn profile-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1 class="hero-title">
+                <span class="gradient-text">Level Up Your Gaming Experience</span>
+            </h1>
+            <p class="hero-subtitle">
+                Discover the ultimate destination for gamers. Get crazy<br>deals on best selling games and gears.
+            </p>
+            <button class="cta-button">Explore Games & Gears</button>
+        </section>
+
+        <section class="features">
+            <div class="feature-content">
+                <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&h=400&fit=crop" alt="Gaming Setup" class="feature-image">
+            </div>
+            <div class="feature-text">
+                <h2 class="section-title">Everything Gamers Need in One Place</h2>
+                <p class="section-description">
+                    GameVerse brings together the games you love and the gear you need all in one place. Browse top titles, discover essential gaming equipment, and get fast delivery to your door without the hassle.
+                </p>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">⭐</div>
+                        <div>
+                            <h3>Trustworthy and Unbiased Ratings</h3>
+                            <p>Get honest ratings from customers</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🏷️</div>
+                        <div>
+                            <h3>Best Deals</h3>
+                            <p>Get the best deals on the latest games and tech</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🚚</div>
+                        <div>
+                            <h3>Growing Delivery</h3>
+                            <p>Secure and Fast Delivery</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="trusted">
+            <p class="trusted-text">TRUSTED BY LEADING GAMING ORGANIZATIONS</p>
+            <div class="trusted-logos">
+                <div class="logo-item">
+                    <img src="https://assets.lis-skins.com/market_images/168622_b.png" alt="Team Liquid">
+                </div>
+                <div class="logo-item">
+                    <img src="https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/dgszpyc0m09osvxwkia2" alt="FaZe Clan">
+                </div>
+                <div class="logo-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Cloud9_logo_c._2023.svg/1200px-Cloud9_logo_c._2023.svg.png" alt="Cloud9">
+                </div>
+                <div class="logo-item">
+                    <img src="https://g2esports.com/cdn/shop/files/G2-Esports-2020-Text_a6cfd9c3-2b8c-46a7-b1df-bb8aec3e2b0c.png?v=1641913953" alt="G2 Esports">
+                </div>
+                <div class="logo-item">
+                    <img src="https://images.seeklogo.com/logo-png/36/2/sk-telecom-t1-logo-png_seeklogo-362284.png" alt="T1">
+                </div>
+                <div class="logo-item">
+                    <img src="https://static.gosugamers.net/3f/47/e0/6cf14690cc1ad987d8071f00deacb27fd1ab7dd2a0cfac7f1ed230585b.png?w=256" alt="100 Thieves">
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <h2 class="section-title gradient-text-alt">What Gamers Are Saying</h2>
+            <p class="section-subtitle">Join countless of satisfied players worldwide</p>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rajeev" alt="User" class="testimonial-avatar">
+                        <div>
+                            <h4>Rajeev_M</h4>
+                            <p class="testimonial-role">Ranked #1 NBA</p>
+                        </div>
+                    </div>
+                    <div class="rating">★★★★★</div>
+                    <p class="testimonial-text">"GameVerse has completely changed how I shop for games. The community reviews are spot on, and I love the exclusive deals!"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=TheBat" alt="User" class="testimonial-avatar">
+                        <div>
+                            <h4>TheBat</h4>
+                            <p class="testimonial-role">Gaming Enthusiast</p>
+                        </div>
+                    </div>
+                    <div class="rating">★★★★★</div>
+                    <p class="testimonial-text">"Best platform for discovering new releases. The purchasing system is seamless and I've never had a better shopping experience."</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Fahd" alt="User" class="testimonial-avatar">
+                        <div>
+                            <h4>Fahd_4</h4>
+                            <p class="testimonial-role">Pro Player</p>
+                        </div>
+                    </div>
+                    <div class="rating">★★★★★</div>
+                    <p class="testimonial-text">"As a competitive player, I need the best gear. GameVerse always has what I need with lightning-fast delivery. 10/10!"</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="section-title">Ready to Join GameVerse?</h2>
+            <p class="section-subtitle">
+                Start your gaming journey today. Exclusive deals, early access,<br>and a community that gets you.
+            </p>
+            <button class="cta-button">Sign Up Now - It's Free</button>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>GameVerse</h3>
+                <p>Your ultimate gaming marketplace. Discover, play, and connect with gamers worldwide.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#">Games</a></li>
+                    <li><a href="#">Gears</a></li>
+                    <li><a href="#">Deals</a></li>
+                    <li><a href="#">Pre-Orders</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="#">Forums</a></li>
+                    <li><a href="#">Streams</a></li>
+                    <li><a href="#">Tournaments</a></li>
+                    <li><a href="#">Events</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Shipping</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 GameVerse. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
