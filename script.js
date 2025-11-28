@@ -1,5 +1,6 @@
 // Cart functionality with localStorage
 let cart = JSON.parse(localStorage.getItem('gameverse_cart')) || [];
+let allProducts = []; // Store all products for filtering
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,6 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('checkout.html')) {
         renderCart();
         updateOrderSummary();
+    }
+    
+    // If on games page, setup filtering
+    if (window.location.pathname.includes('games.html')) {
+        setupFiltering();
     }
     
     // Add to cart buttons
@@ -124,14 +130,14 @@ function renderCart() {
             <div class="cart-list-item-info">
                 <h4>${item.product}</h4>
                 <p>${item.category}</p>
-                <p class="item-price">$${item.price.toFixed(2)}</p>
+                <p class="item-price">${item.price.toFixed(2)}</p>
             </div>
             <div class="quantity-controls">
-                <button onclick="updateQuantity('${item.product}', -1)">-</button>
+                <button onclick="updateQuantity(\`${item.product}\`, -1)">-</button>
                 <span>${item.quantity || 1}</span>
-                <button onclick="updateQuantity('${item.product}', 1)">+</button>
+                <button onclick="updateQuantity(\`${item.product}\`, 1)">+</button>
             </div>
-            <button class="remove-btn" onclick="removeFromCart('${item.product}')">
+            <button class="remove-btn" onclick="removeFromCart(\`${item.product}\`)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 </svg>
@@ -147,7 +153,7 @@ function renderCart() {
                 <div class="cart-item-info">
                     <h4>${item.product}</h4>
                     <p>${item.category}</p>
-                    <p class="item-price">$${item.price.toFixed(2)}</p>
+                    <p class="item-price">${item.price.toFixed(2)}</p>
                 </div>
                 <span class="item-quantity">x${item.quantity || 1}</span>
             </div>
@@ -305,3 +311,88 @@ document.querySelectorAll('.cta-button').forEach(button => {
         }
     });
 });
+
+// Filtering functionality for games page
+function setupFiltering() {
+    // Store all products initially
+    const productCards = document.querySelectorAll('.product-card');
+    allProducts = Array.from(productCards).map(card => ({
+        element: card,
+        title: card.querySelector('.product-title').textContent.toLowerCase(),
+        category: card.querySelector('.product-category').textContent.toLowerCase(),
+        price: parseFloat(card.querySelector('.product-price').textContent.replace(`'`, ''))
+    }));
+    
+    // Get filter elements
+    const productTypeFilter = document.querySelector('.filter-select:nth-child(2)');
+    const priceRangeFilter = document.querySelector('.filter-select:nth-child(3)');
+    const sortFilter = document.querySelector('.filter-select:nth-child(4)');
+    
+    // Add event listeners
+    if (productTypeFilter) {
+        productTypeFilter.addEventListener('change', applyFilters);
+    }
+    if (priceRangeFilter) {
+        priceRangeFilter.addEventListener('change', applyFilters);
+    }
+    if (sortFilter) {
+        sortFilter.addEventListener('change', applyFilters);
+    }
+}
+
+function applyFilters() {
+    const productTypeFilter = document.querySelector('.filter-select:nth-child(2)');
+    const priceRangeFilter = document.querySelector('.filter-select:nth-child(3)');
+    const sortFilter = document.querySelector('.filter-select:nth-child(4)');
+    
+    const productType = productTypeFilter?.value || 'All Products';
+    const priceRange = priceRangeFilter?.value || 'Price Range';
+    const sortBy = sortFilter?.value || 'Sort By: Featured';
+    
+    // Filter products
+    let filteredProducts = [...allProducts];
+    
+    // Filter by product type
+    if (productType === 'Games') {
+        filteredProducts = filteredProducts.filter(p => 
+            !p.category.includes('controller') && 
+            !p.category.includes('keyboard') && 
+            !p.category.includes('headset')
+        );
+    } else if (productType === 'Accessories') {
+        filteredProducts = filteredProducts.filter(p => 
+            p.category.includes('controller') || 
+            p.category.includes('keyboard') || 
+            p.category.includes('headset')
+        );
+    }
+    
+    // Filter by price range
+    if (priceRange === 'Under $50') {
+        filteredProducts = filteredProducts.filter(p => p.price < 50);
+    } else if (priceRange === '$50 - $100') {
+        filteredProducts = filteredProducts.filter(p => p.price >= 50 && p.price <= 100);
+    } else if (priceRange === 'Over $100') {
+        filteredProducts = filteredProducts.filter(p => p.price > 100);
+    }
+    
+    // Sort products
+    if (sortBy === 'Price: Low to High') {
+        filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'Price: High to Low') {
+        filteredProducts.sort((a, b) => b.price - a.price);
+    }
+    
+    // Hide all products first
+    allProducts.forEach(p => p.element.style.display = 'none');
+    
+    // Show filtered products
+    const grid = document.querySelector('.products-grid');
+    if (grid) {
+        // Clear and re-append in sorted order
+        filteredProducts.forEach(p => {
+            p.element.style.display = 'block';
+            grid.appendChild(p.element);
+        });
+    }
+}
