@@ -151,6 +151,22 @@ function checkUserStatus() {
     }
 }
 
+// Function to format card number input (optional but nice UX)
+function formatCardNumber(input) {
+    let value = input.value.replace(/\s/g, ''); // Remove spaces
+    let formattedValue = value.replace(/(\d{4})/g, '$1 ').trim(); // Add space every 4 digits
+    input.value = formattedValue.substring(0, 19);
+}
+
+// Function to format expiry date input (optional but nice UX)
+function formatExpiryDate(input) {
+    let value = input.value.replace(/\s|\//g, ''); // Remove spaces and slashes
+    if (value.length > 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2);
+    }
+    input.value = value.substring(0, 5);
+}
+
 
 // --- PRODUCT DISPLAY, FILTERING, AND SEARCH LOGIC ---
 
@@ -370,6 +386,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('Login failed. Check your email and password.', 'error');
             }
         });
+    }
+
+    // --- PAYMENT INPUT FORMATTING ---
+    const cardNumberInput = document.getElementById('cardNumber');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', (e) => formatCardNumber(e.target));
+    }
+
+    const expiryDateInput = document.getElementById('expiryDate');
+    if (expiryDateInput) {
+        expiryDateInput.addEventListener('input', (e) => formatExpiryDate(e.target));
     }
     
     // --- SEARCH TOGGLE & INPUT LOGIC ---
@@ -684,24 +711,56 @@ function goToDelivery() {
 }
 
 // Complete purchase
+// Complete purchase (UPDATED WITH DUMMY PAYMENT LOGIC)
 function completePurchase() {
-    // Simple payment form validation
-    const cardNumber = document.querySelector('.payment-form input[placeholder="1234 5678 9012 3456"]').value;
-    const expiryDate = document.querySelector('.payment-form input[placeholder="MM/YY"]').value;
-    const cvv = document.querySelector('.payment-form input[placeholder="123"]').value;
+    // Dummy valid payment details for prototype
+    const VALID_CARD = '1111222233334444';
+    const VALID_EXPIRY = '12/26';
+    const VALID_CVV = '123';
+    
+    // Get form inputs by ID
+    const cardNumberInput = document.getElementById('cardNumber');
+    const expiryDateInput = document.getElementById('expiryDate');
+    const cvvInput = document.getElementById('cvv');
 
-    if (cardNumber.length < 19 || expiryDate.length < 5 || cvv.length < 3) {
-        showToast('Please enter valid payment details.', 'error');
+    // Clean input values for validation
+    const cardNumber = cardNumberInput ? cardNumberInput.value.replace(/\s/g, '') : '';
+    const expiryDate = expiryDateInput ? expiryDateInput.value.trim() : '';
+    const cvv = cvvInput ? cvvInput.value.trim() : '';
+
+    // 1. Basic format validation
+    if (cardNumber.length !== 16 || expiryDate.length !== 5 || cvv.length !== 3) {
+        showToast('Please enter complete and correctly formatted card details.', 'error');
         return;
     }
     
-    // Clear cart
-    cart = [];
-    saveCart();
-    updateCartCount();
-    
-    // Show success modal
-    document.getElementById('successModal').style.display = 'flex';
+    // 2. Dummy credential check
+    if (cardNumber === VALID_CARD && expiryDate === VALID_EXPIRY && cvv === VALID_CVV) {
+        // Validation successful
+        
+        // Clear cart
+        cart = [];
+        saveCart();
+        updateCartCount();
+        
+        // Show success modal
+        document.getElementById('successModal').style.display = 'flex';
+    } else {
+        // Validation failed
+        showToast(`Payment Failed. Use dummy card: 1111 2222 3333 4444 (Exp: 12/26, CVV: 123)`, 'error');
+        
+        // Optional: Highlight fields with errors
+        cardNumberInput.style.borderColor = '#ef4444';
+        expiryDateInput.style.borderColor = '#ef4444';
+        cvvInput.style.borderColor = '#ef4444';
+        
+        // Reset border colors after a delay
+        setTimeout(() => {
+            cardNumberInput.style.borderColor = 'var(--border-color)';
+            expiryDateInput.style.borderColor = 'var(--border-color)';
+            cvvInput.style.borderColor = 'var(--border-color)';
+        }, 3000);
+    }
 }
 
 // Smooth scroll for CTA buttons (function body remains the same)
