@@ -212,6 +212,8 @@ body {
     padding: 4rem 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    background-color: var(--secondary-bg);
+    border-radius: 16px; /* Optional: Adds a nice curve to the background */
 }
 
 .trusted-text {
